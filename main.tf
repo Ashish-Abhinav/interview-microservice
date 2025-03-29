@@ -1,12 +1,10 @@
-
-
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true
   enable_dns_hostnames = true
 
   tags = {
-    Name = "MyVPC"
+    Name = "group15-hu2-vpc"
   }
 }
 
@@ -38,7 +36,7 @@ resource "aws_subnet" "private" {
 }
 
 resource "aws_iam_role" "eks_cluster_role" {
-  name = "eks-cluster-role"
+  name = "group15-hu2-eks-cluster-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -79,7 +77,7 @@ resource "aws_security_group" "eks_sg" {
   }
 
   tags = {
-    Name = "eks-sg"
+    Name = "group15-hu2-eks-sg"
   }
 }
 
@@ -91,7 +89,18 @@ resource "aws_ecr_repository" "ecr" {
   }
 
   tags = {
-    Name = var.ecr_repository_name
+    Name = "group15-hu2-ecr-repo"
+  }
+}
+
+resource "aws_instance" "eks_worker" {
+  ami                    = "ami-02f624c08a83ca16f"   
+  instance_type          = "t3.micro"
+  subnet_id              = element(aws_subnet.private[*].id, 0)
+  vpc_security_group_ids = [aws_security_group.eks_sg.id]
+
+  tags = {
+    Name = "group15-hu2-EKSWorkerNode"
   }
 }
 

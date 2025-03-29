@@ -9,3 +9,7 @@ output "eks_cluster_id" {
 output "ecr_repository_url" {
   value = aws_ecr_repository.ecr.repository_url
 }
+
+output "ec2_instance_id" {
+  value = aws_instance.eks_worker.id
+}
